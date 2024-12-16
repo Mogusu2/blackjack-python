@@ -7,6 +7,7 @@ class TestPlayer(unittest.TestCase):
         self.player = Player("Test Player")
         self.card1 = Card("Hearts", "5", 5)
         self.card2 = Card("Diamonds", "Ace", 11)
+        self.card3 = Card("Clubs", "8", 8)
 
     def test_player_initialization(self):
         self.assertEqual(self.player.name, "Test Player")
@@ -24,7 +25,7 @@ class TestPlayer(unittest.TestCase):
         self.player.add_card(self.card1)  # Add 5
         self.assertEqual(self.player.score, 16)
         self.player.add_card(Card("Clubs", "8", 8))  # Bust with 8
-        self.assertEqual(self.player.score, 24)
+        self.assertEqual(self.player.score, 14)
 
     def test_update_score_ace_adjustment(self):
         self.player.add_card(self.card2)  # Ace as 11

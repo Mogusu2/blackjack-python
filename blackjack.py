@@ -1,6 +1,6 @@
 from classes.deck import Deck
 from classes.player import Player
-from utils.display import display_cards, display_message
+from utils.display import display_cards, display_dealer_hand, display_message
 
 class BlackjackGame:
     def __init__(self):
@@ -11,6 +11,7 @@ class BlackjackGame:
     def deal_initial_cards(self):
         """
         Deal two cards to both the player and the dealer.
+        The dealer's second card will be hidden initially.
         """
         for _ in range(2):
             self.player.add_card(self.deck.draw_card())
@@ -22,6 +23,7 @@ class BlackjackGame:
         """
         while True:
             display_cards(self.player)
+            display_dealer_hand(self.dealer, show_first_card=True)  # Show dealer's first card hidden
             action = input("Do you want to [H]it or [S]tay? ").strip().lower()
             if action == 'h':
                 self.player.add_card(self.deck.draw_card())
@@ -35,9 +37,19 @@ class BlackjackGame:
     def dealer_turn(self):
         """
         Handle the dealer's turn, which is automated.
+        The dealer hits until they reach 17 or higher.
         """
+        display_message("Dealer's Turn:")
+        display_cards(self.player)
+
+        # Reveal one dealer card, hide the other
+        display_dealer_hand(self.dealer, show_first_card=True) 
+        
         while self.dealer.score < 17:
             self.dealer.add_card(self.deck.draw_card())
+            # After each hit, show the new dealer card but hide the last one
+            display_dealer_hand(self.dealer, show_first_card=True)
+        
         if self.dealer.is_busted():
             display_message("Dealer busted!", "bold red")
 
@@ -47,7 +59,7 @@ class BlackjackGame:
         """
         display_message("\nFinal Results:")
         display_cards(self.player)
-        display_cards(self.dealer)
+        display_dealer_hand(self.dealer, show_first_card=False)  # Reveal full dealer's hand
 
         if self.player.is_busted():
             display_message("Dealer wins! (Player busted)", "bold red")
